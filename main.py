@@ -64,6 +64,8 @@ def cate_cifre(n):
     Aflu cate cifre are un numar
     Acest lucru ajuta la concatenarea unor numere
     """
+    if n == 0:
+        return 1
     cifre = 0
     copien = n
     while copien:
@@ -80,6 +82,41 @@ def concatenare(list):
     for numar in list:
         numar_mare = numar_mare * (10**cate_cifre(numar)) + numar
     return numar_mare
+
+
+def get_longest_concat_is_prime(lst):
+    """
+    Functia returneaza cea mai lunga secventa in care concatenarea numerelor din aceasta
+    este un numar prim
+    :param lst: list[int]
+    :return: secventa_maxima_3 - secventa maxima care respecta regula - list[int]
+    """
+    secventa_maxima_3 = []
+    for start in range(len(lst)):
+        for end in range(start, len(lst) + 1):
+            if concatenare_is_prime(lst[start:end]) and len(lst[start:end]) > len(secventa_maxima_3):
+                secventa_maxima_3 = lst[start:end]
+    return secventa_maxima_3
+
+
+
+def concatenare_is_prime(lst: list[int]):
+    """
+    O fucntie ajutatoare care verifica daca concatenarea numerelor dintr-o lista este numar prim
+    Folosesc fuctia concatenare definita mai sus
+    """
+    numar_mare = concatenare(lst)
+    if numar_mare < 2:
+        return False
+    if numar_mare == 2 :
+        return True
+    if numar_mare % 2 == 0:
+        return False
+    for divizor in range(3, int(numar_mare/2)):
+        if numar_mare % divizor == 0:
+            return False
+    return True
+
 
 
 def citire_lista_principala():
@@ -103,11 +140,19 @@ def test_get_longest_product_is_odd():
     assert get_longest_product_is_odd([295, 9347, 93476, 2455433]) == [295, 9347]
 
 
+def test_get_longest_concat_is_prime():
+    assert get_longest_concat_is_prime([3, 0, 3, 0, 1]) == [0, 3]
+    assert get_longest_concat_is_prime([12, 24, 10, 1]) == [10, 1]
+    assert get_longest_concat_is_prime([1, 12, 24 , 45]) == []
+
+
 def main():
     while True:
         print('1. Cea mai lunga secventa in care produsul numerelor este impar')
         print('2. Cea mai lunga secventa in care concatenarea numerelor din aceasta'
-              'are cifrele crescatoare')
+              ' are cifrele crescatoare')
+        print('3. Cea mai lunga secventa in care concatenarea numerelor din aceasta'
+              ' este un numar prim')
         print('x. Exit !')
         optiune = input('Alege optiunea : ')
         if optiune == '1':
@@ -119,6 +164,11 @@ def main():
             print('Cea mai lunga secventa in care concatenarea numerelor din aceasta'
                   'are cifrele crescatoare este: ')
             print(get_longest_concat_digits_asc(lista3))
+        elif optiune == '3':
+            lista4 = citire_lista_principala()
+            print('Cea mai lunga secventa in care concatenarea numerelor din aceasta'
+                  'este un numar prim este: ')
+            print(get_longest_concat_is_prime(lista4))
         elif optiune == 'x':
             break
 
@@ -128,6 +178,8 @@ test_get_longest_product_is_odd()
 
 test_get_longest_concat_digits_asc()
 
+
+test_get_longest_concat_is_prime()
 
 main()
 
